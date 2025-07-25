@@ -6,7 +6,7 @@ const initialGameBoard = [
   [null, null, null],
 ];
 
-export default function GameBoard() {
+export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
   const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
   // Handles the selection of a square on the game board, updates the gameBoard state with the selected square's index and sets it to "X", the event is created by the onClick event listener
@@ -22,9 +22,11 @@ export default function GameBoard() {
       const updatedBoard = [
         ...prevGameBoard.map((innerArray) => [...innerArray]),
       ];
-      updatedBoard[rowIndex][colIndex] = "X";
+      updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
       return updatedBoard;
     });
+
+    onSelectSquare();
   }
 
   return (

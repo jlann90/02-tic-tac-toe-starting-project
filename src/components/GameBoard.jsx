@@ -1,3 +1,4 @@
+// The initial empty tic-tac-toe board (3x3 grid)
 const initialGameBoard = [
   [null, null, null],
   [null, null, null],
@@ -5,25 +6,22 @@ const initialGameBoard = [
 ];
 
 export default function GameBoard({ onSelectSquare, turns }) {
+  // Start with a fresh board for each render
   let gameBoard = initialGameBoard;
 
+  // Fill in the board based on the list of turns (moves)
   for (const turn of turns) {
     const { square, player } = turn;
     const { row, col } = square;
 
+    // Place the player's symbol (X or O) in the correct spot
     gameBoard[row][col] = player;
   }
 
+  // (Commented out) Example of using local state for the board instead of deriving it from turns
   //   const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
-  //   // Handles the selection of a square on the game board, updates the gameBoard state with the selected square's index and sets it to "X", the event is created by the onClick event listener
-  //   // The function creates a copy of the current gameBoard state, updates the selected square with "X", and then sets the gameBoard state to the updated board.
-  //   // The useState hook is used to manage the gameBoard state, and the setGameBoard function is used to update the state.
-  //   // The function takes the rowIndex and colIndex of the selected square as arguments, and
-  //   // updates the gameBoard state with the selected square's index and sets it to "X".
-  //   // The function uses the spread operator to create a copy of the current gameBoard state,
-  //   // and then updates the selected square with "X". Finally, it sets the gameBoard state to the updated board.
-  //   // This allows the game board to be updated dynamically as the player selects squares.
+  //   // Example handler for updating the board state directly (not used in this version)
   //   function handleSelectSquare(rowIndex, colIndex) {
   //     setGameBoard((prevGameBoard) => {
   //       const updatedBoard = [
@@ -36,6 +34,7 @@ export default function GameBoard({ onSelectSquare, turns }) {
   //     onSelectSquare();
   //   }
 
+  // Render the game board as a list of rows and columns
   return (
     <ol id="game-board">
       {gameBoard.map((row, rowIndex) => (
@@ -43,6 +42,7 @@ export default function GameBoard({ onSelectSquare, turns }) {
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
+                {/* Render a button for each square; show X, O, or nothing */}
                 <button onClick={() => onSelectSquare(rowIndex, colIndex)}>
                   {playerSymbol}
                 </button>

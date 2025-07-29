@@ -1,23 +1,4 @@
-// The initial empty tic-tac-toe board (3x3 grid)
-const initialGameBoard = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-
-export default function GameBoard({ onSelectSquare, turns }) {
-  // Start with a fresh board for each render
-  let gameBoard = initialGameBoard;
-
-  // Fill in the board based on the list of turns (moves)
-  for (const turn of turns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    // Place the player's symbol (X or O) in the correct spot
-    gameBoard[row][col] = player;
-  }
-
+export default function GameBoard({ onSelectSquare, board }) {
   // (Commented out) Example of using local state for the board instead of deriving it from turns
   //   const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
@@ -37,7 +18,7 @@ export default function GameBoard({ onSelectSquare, turns }) {
   // Render the game board as a list of rows and columns
   return (
     <ol id="game-board">
-      {gameBoard.map((row, rowIndex) => (
+      {board.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((playerSymbol, colIndex) => (

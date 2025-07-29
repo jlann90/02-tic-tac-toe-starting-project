@@ -25,6 +25,12 @@ function deriveActivePlayer(gameTurnsArg) {
 }
 
 function App() {
+  // State for tracking player names and symbols
+  const [players, setPlayers] = useState({
+    X: "Player 1",
+    O: "Player 2",
+  });
+
   // State for tracking all moves made in the game (each move is an object with row, col, and player)
   const [gameTurns, setGameTurns] = useState([]);
 
@@ -32,7 +38,7 @@ function App() {
   const activePlayer = deriveActivePlayer(gameTurns);
 
   // Start with a fresh board for each render
-  let gameBoard = initialGameBoard;
+  let gameBoard = [...initialGameBoard.map((array) => [...array])];
 
   // Fill in the board based on the list of turns (moves)
   for (const turn of gameTurns) {
@@ -59,7 +65,7 @@ function App() {
       firstSquareSymbol === secondSquareSymbol &&
       firstSquareSymbol === thirdSquareSymbol
     ) {
-      winner = firstSquareSymbol; // If all three squares in the combination match, we have a winner
+      winner = players[firstSquareSymbol]; // If all three squares in the combination match, we have a winner
     }
   }
 
@@ -81,6 +87,19 @@ function App() {
     });
   }
 
+  function handleRematch() {
+    setGameTurns([]); // Reset the game by clearing all turns
+  }
+
+  function handlePlayerNameChange(symbol, newName) {
+    setPlayers((prevPlayers) => {
+      return {
+        ...prevPlayers,
+        [symbol]: newName,
+      };
+    });
+  }
+
   // Render the main game UI
   return (
     <main>
@@ -90,14 +109,18 @@ function App() {
             initialName="Player 1"
             symbol="X"
             isActive={activePlayer === "X"}
+            onChangeName={handlePlayerNameChange}
           />
           <Player
             initialName="Player 2"
             symbol="O"
             isActive={activePlayer === "O"}
+            onChangeName={handlePlayerNameChange}
           />
         </ol>
-        {(winner || hasDraw) && <GameOver winner={winner} />}
+        {(winner || hasDraw) && (
+          <GameOver winner={winner} onRestart={handleRematch} />
+        )}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
 

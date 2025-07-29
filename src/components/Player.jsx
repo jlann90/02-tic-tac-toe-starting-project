@@ -1,12 +1,20 @@
 import { useState } from "react";
 
-export default function Player({ initialName, symbol, isActive }) {
+export default function Player({
+  initialName,
+  symbol,
+  isActive,
+  onChangeName,
+}) {
   const [playerName, setPlayerName] = useState(initialName);
   const [isEditing, setIsEditing] = useState(false);
 
   // Toggles editing state, "editing" is a prop passed into the setIsEditing state function housed within the handleEditClick function
   function handleEditClick() {
     setIsEditing((editing) => !editing);
+    if (isEditing) {
+      onChangeName(symbol, playerName); // Call the parent function to update the player name
+    }
   }
 
   // Handles the change in the input field, updates the playerName state with the value from the input field, the event is created by the onChange event listener and creates an object that contains the value of the input field

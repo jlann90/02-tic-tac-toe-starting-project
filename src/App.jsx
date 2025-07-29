@@ -3,6 +3,7 @@ import { useState } from "react";
 import GameBoard from "./components/GameBoard.jsx";
 import Player from "./components/Player.jsx";
 import Log from "./components/Log.jsx";
+import GameOver from "./components/GameOver.jsx";
 import { WINNING_COMBINATIONS } from "./winning-combinations.js";
 
 // The initial empty tic-tac-toe board (3x3 grid)
@@ -61,6 +62,9 @@ function App() {
       winner = firstSquareSymbol; // If all three squares in the combination match, we have a winner
     }
   }
+
+  const hasDraw = gameTurns.length === 9 && !winner;
+
   // Function that runs when a square is clicked on the board
   function handleSelectSquare(rowIndex, colIndex) {
     // Add the new move to the list of turns
@@ -93,7 +97,7 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
-        {winner && <p>You won, {winner}!</p>}
+        {(winner || hasDraw) && <GameOver winner={winner} />}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
 

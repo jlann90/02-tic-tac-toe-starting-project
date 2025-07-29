@@ -6,8 +6,10 @@ import Log from "./components/Log.jsx";
 import GameOver from "./components/GameOver.jsx";
 import { WINNING_COMBINATIONS } from "./winning-combinations.js";
 
+const PLAYERS = { X: "Player 1", O: "Player 2" };
+
 // The initial empty tic-tac-toe board (3x3 grid)
-const initialGameBoard = [
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
@@ -24,21 +26,10 @@ function deriveActivePlayer(gameTurnsArg) {
   return currentPlayer; // Return the player whose turn it is
 }
 
-function App() {
-  // State for tracking player names and symbols
-  const [players, setPlayers] = useState({
-    X: "Player 1",
-    O: "Player 2",
-  });
-
-  // State for tracking all moves made in the game (each move is an object with row, col, and player)
-  const [gameTurns, setGameTurns] = useState([]);
-
-  // Figure out which player is currently active using the helper function
-  const activePlayer = deriveActivePlayer(gameTurns);
-
+// Helper function to derive the game board from the list of turns
+function deriveGameBoard(gameTurns) {
   // Start with a fresh board for each render
-  let gameBoard = [...initialGameBoard.map((array) => [...array])];
+  let gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
 
   // Fill in the board based on the list of turns (moves)
   for (const turn of gameTurns) {
@@ -48,7 +39,11 @@ function App() {
     // Place the player's symbol (X or O) in the correct spot
     gameBoard[row][col] = player;
   }
+  return gameBoard; // Return the filled board
+}
 
+// Helper function to determine if there's a winner based on the current game board
+function deriveWinner(gameBoard, players) {
   let winner = null;
 
   // Check for a winning combination
@@ -68,6 +63,24 @@ function App() {
       winner = players[firstSquareSymbol]; // If all three squares in the combination match, we have a winner
     }
   }
+
+  return winner;
+}
+
+// Main App component that brings everything together
+function App() {
+  // State for tracking player names and symbols
+  const [players, setPlayers] = useState(PLAYERS);
+
+  // State for tracking all moves made in the game (each move is an object with row, col, and player)
+  const [gameTurns, setGameTurns] = useState([]);
+
+  // Figure out which player is currently active using the helper function
+  const activePlayer = deriveActivePlayer(gameTurns);
+  // Derive the game board from the list of turns and check for a winner
+  const gameBoard = deriveGameBoard(gameTurns);
+  // Check if there's a winner based on the current game board and players
+  const winner = deriveWinner(gameBoard, players);
 
   const hasDraw = gameTurns.length === 9 && !winner;
 
@@ -106,13 +119,13 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            initialName="Player 1"
+            initialName={PLAYERS.X}
             symbol="X"
             isActive={activePlayer === "X"}
             onChangeName={handlePlayerNameChange}
           />
           <Player
-            initialName="Player 2"
+            initialName={PLAYERS.O}
             symbol="O"
             isActive={activePlayer === "O"}
             onChangeName={handlePlayerNameChange}
